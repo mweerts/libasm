@@ -27,11 +27,17 @@ $(NAME) :	$(OBJS)
 
 clean: 
 		@echo "$(BOLD_GREEN)[libasm] $(RED)Cleaning objs$(END)"
+		@rm -rf main.o
 		@rm -rf $(OBJS)
 
 fclean: 
 		@echo "$(BOLD_GREEN)[libasm] $(RED)Cleaning all$(END)"
 		@rm -rf $(OBJS)
+		@rm -rf main.o a.out
 		@rm -rf $(NAME)
 
 re: fclean all
+
+run:	all
+		clang main.c libasm.a 
+		./a.out all
