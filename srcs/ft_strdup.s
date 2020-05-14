@@ -1,34 +1,36 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    ft_strcpy.s                                        :+:      :+:    :+:    #
+#    ft_strdup.s                                        :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: mweerts <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/05/13 12:53:43 by mweerts           #+#    #+#              #
-#    Updated: 2020/05/14 15:26:44 by mweerts          ###   ########.fr        #
+#    Created: 2020/05/14 12:38:27 by mweerts           #+#    #+#              #
+#    Updated: 2020/05/14 15:54:47 by mweerts          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-; *strcpy(char *dest, const char *src)
-; rdi = *dest
-; rsi = *src
+;ft_strdup(cont char *s)
+;rdi = *s
 
 section .text
-    global ft_strcpy
+    global ft_strdup
+    extern malloc
+    extern ft_strlen
+    extern ft_strcpy
 
-ft_strcpy:
-    mov rcx, 0
+ft_strdup:
+    push rdi
+    call ft_strlen
+    mov rdi, rax
+    call malloc
+    cmp rax, 0
+        jz error
+    pop rsi
+    mov rdi, rax
+    call ft_strcpy
+    ret
 
-loop:
-    mov al, byte[rsi + rcx]
-    mov byte[rdi + rcx], al
-    cmp byte[rsi + rcx], 0
-		jz end
-	inc rcx
-    jmp loop
-
-end:
-    mov     byte[rdi + rcx + 1], 0
-    mov     rax, rdi
+error:
+    mov rax, 0
     ret

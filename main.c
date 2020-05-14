@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mweerts <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/05/14 16:01:54 by mweerts           #+#    #+#             */
+/*   Updated: 2020/05/14 16:01:54 by mweerts          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include "libasm.h"
 #include <string.h>
@@ -10,6 +22,8 @@ void test_strlen();
 void test_strcpy();
 void test_write();
 void test_strcmp();
+void test_strdup();
+void test_read();
 
 int main(int argc, char **argv)
 {
@@ -28,12 +42,18 @@ int main(int argc, char **argv)
 		test_strcmp();
 	else if (strcmp(argv[1], "ft_write") == 0)
 		test_write();
+	else if (strcmp(argv[1], "ft_strdup") == 0)
+		test_strdup();
+	else if (strcmp(argv[1], "ft_read") == 0)
+		test_read();
 	else if (strcmp(argv[1], "all") == 0)
 	{
 		test_strlen();
 		test_strcpy();
 		test_strcmp();
 		test_write();
+		test_read();
+		test_strdup();
 	}
     else
     {
@@ -102,4 +122,47 @@ void	test_write()
 		printf(" {REAL} : %zd\terrno : %d\n\n", write(1, tab[i], strlen(tab[i])), errno);
 		i++;
 	}
+}
+
+void	test_read()
+{
+	int fd;
+	int ret;
+	char buff[100];
+
+	printf("\033[01;32m==========\tft_read\t==========\n\n\033[0;0m");
+	fd = open("srcs/ft_strcpy.s", O_RDONLY);
+	ret = ft_read(fd, buff, 100);
+	printf("{MINE} : %s\nerrno : %d\n", buff, errno);
+	errno = 0;
+	close(fd);
+	memset(buff, 0, 100);
+	fd = open("srcs/ft_strcpy.s", O_RDONLY);
+	ret = read(fd, buff, 100);
+	printf("{REAL} : %s\nerrno : %d\n\n", buff, errno);
+	memset(buff, 0, 100);
+
+	fd = open("srcs/ft_strcpy.s", O_WRONLY);
+	ret = ft_read(fd, buff, 100);
+	printf("{MINE} : %s\nerrno : %d\n", buff, errno);
+	errno = 0;
+	close(fd);
+	memset(buff, 0, 100);
+	fd = open("srcs/ft_strcpy.s", O_WRONLY);
+	ret = read(fd, buff, 100);
+	printf("{REAL} : %s\nerrno : %d\n\n", buff, errno);
+	memset(buff, 0, 100);
+}
+
+void	test_strdup()
+{
+	int i = 0;
+
+	printf("\033[01;32m==========\tft_strdup\t==========\n\n\033[0;0m");
+	while (tab[i])
+	{
+		printf("{MINE}: %s\n{REAL}: %s\n\n", ft_strdup(tab[i]), strdup(tab[i]));
+		i++;
+	}
+	printf("{MINE}: %s\n{REAL}: %s\n\n", ft_strdup("\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0b\x0c\x0d\x0e\x0f"), strdup("\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0b\x0c\x0d\x0e\x0f"));
 }
